@@ -15,21 +15,21 @@
                     slidesPerView : 2,
                 }
             }" :modules="modules" class="w-4/5 md:w-3/4 p-2">
-            <SwiperSlide v-for="(data, index) in data.activities" :key="index" class="">
+            <SwiperSlide v-for="(item, index) in activitiesList" :key="index" class="">
                 <div v-if="isLoading">
                     <SkeletonLoading /> 
                 </div>
                 <div v-else class="flex flex-col p-2">
                     <div class="w-full rounded-md md:h-64">
-                        <img class="w-full h-full rounded-md" :src="data.image" :alt="`gambar ${index + 1}`" loading="lazy" />
+                        <img class="w-full h-full rounded-md object-cover" :src="item.image" :alt="`gambar ${index + 1}`" loading="lazy" />
                     </div>
                     <div class="p-4">
-                        <p class="md:text-xl font-serif font-semibold">{{ data.title }}</p>
-                        <p class="text-justify truncate">{{ data.desc }}</p>
+                        <p class="md:text-xl font-serif font-semibold">{{ item.title }}</p>
+                        <p class="text-justify truncate">{{ item.desc }}</p>
                     </div>
                     <div class="flex flex-row-reverse">
                         <button 
-                            @click="openModal(data)"
+                            @click="openModal(item)"
                             class="p-1 md:p-2 border outline outline-pink-500 rounded-xl hover:bg-pink-300">
                             Read More
                         </button>
@@ -45,7 +45,7 @@
 
 <script setup>
 // Import Swiper Vue.js components
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -55,21 +55,47 @@ import 'swiper/css/effect-coverflow';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 import SkeletonLoading from './SkeletonLoading.vue';
 
-const{ data } = defineProps({
+const props = defineProps({
     data: {
-        type : Object,
-        required: true
+        type: Object,
+        default: () => ({})
     },
-    isLoading:{
-        type : Boolean
+    isLoading: {
+        type: Boolean,
+        default: false
     }
+});
+
+const defaultActivities = [
+    {
+        title: 'Tech Meetup & Workshop',
+        desc: 'Berbagi pengalaman dan mendiskusikan arsitektur web modern serta tren pengembangan software terkini bersama komunitas developer.',
+        image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        title: 'Code Hackathon',
+        desc: 'Kolaborasi intensif membangun solusi aplikasi inovatif dalam waktu 48 jam bersama tim lintas fungsi.',
+        image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        title: 'Open Source Contribution',
+        desc: 'Berkontribusi pada proyek open source dan pengembangan pustaka utilitas untuk ekosistem pengembang.',
+        image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80'
+    }
+];
+
+const activitiesList = computed(() => {
+    if (props.data?.activities && Array.isArray(props.data.activities) && props.data.activities.length > 0) {
+        return props.data.activities;
+    }
+    return defaultActivities;
 });
 
 const showModal = ref(false)
 const selectedCard = ref(null)
 
-const openModal = (data) => {
-  selectedCard.value = data
+const openModal = (item) => {
+  selectedCard.value = item
   showModal.value = true
 }
 

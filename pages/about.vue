@@ -88,10 +88,16 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 
 const config = useRuntimeConfig();
-const data = config.public.apiConfig;
+const rawData = config.public.apiConfig || {};
 
+const data = computed(() => ({
+    skills: (rawData.skills && rawData.skills.length) ? rawData.skills : "",
+    experiences: (rawData.experiences && rawData.experiences.length) ? rawData.experiences : "",
+    educations: (rawData.educations && rawData.educations.length) ? rawData.educations : ""
+}));
 </script>
 
 <style></style>
