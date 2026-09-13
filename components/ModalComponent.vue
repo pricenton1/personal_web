@@ -5,6 +5,23 @@ defineProps({
 })
 
 const emit = defineEmits(['close'])
+
+const defaultImage = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'
+const assetImages = import.meta.glob('~/assets/images/**/*', { eager: true, import: 'default' })
+
+const resolveImage = (imgSrc) => {
+  if (!imgSrc) return defaultImage
+  if (imgSrc.startsWith('http://') || imgSrc.startsWith('https://') || imgSrc.startsWith('data:')) {
+    return imgSrc
+  }
+  const filename = imgSrc.split('/').pop()
+  for (const [path, url] of Object.entries(assetImages)) {
+    if (path.endsWith(filename)) {
+      return url
+    }
+  }
+  return imgSrc
+}
 </script>
 
 <template>
@@ -22,7 +39,7 @@ const emit = defineEmits(['close'])
             </div>
             <div class="flex flex-col md:flex-row gap-4 mb-3">
                 <div class="md:h-64 h-48 md:w-1/2 flex-shrink-0">
-                    <img class="w-full h-full object-cover rounded-xl shadow-md border border-pink-200" :src="card?.image" :alt="`gambar ${card?.title}`" />
+                    <img class="w-full h-full object-cover rounded-xl shadow-md border border-pink-200" :src="resolveImage(card?.image)" :alt="`gambar ${card?.title}`" />
                 </div>
                 <div class="md:w-1/2 flex flex-col justify-between">
                     <div>

@@ -53,13 +53,21 @@
 
                     <!-- TAB CONTENT: Activities -->
                     <div v-else key="activities" class="flex flex-col justify-center px-2 md:px-4">
-                        <div id="wrapper-gallery" class="w-full border-b-8 rounded-b-3xl border-pink-300 border-opacity-20 pb-6">
+                        <div id="wrapper-gallery" class="w-full">
                             <CardGallery :data="data" :isLoading="isLoading" />
                         </div>
-                        <div v-if="data?.certificates && data.certificates.length" class="mt-8">
-                            <h2 class="text-xl font-bold text-center text-slate-700 mb-4">
-                                <i class="fa-solid fa-certificate text-pink-500 mr-2"></i>Certificates & Awards
-                            </h2>
+                        <div v-if="data?.certificates && data.certificates.length" class="mt-10 pt-8 border-t border-pink-200/80">
+                            <div class="text-center mb-4">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs font-semibold mb-2 border border-pink-200 shadow-xs">
+                                    <i class="fa-solid fa-award"></i> CREDENTIALS
+                                </span>
+                                <h2 class="text-2xl md:text-3xl font-bold font-serif text-slate-800 tracking-wide">
+                                    Certificates & Awards
+                                </h2>
+                                <p class="text-slate-500 text-xs md:text-sm mt-1">
+                                    Click on any certificate to view preview
+                                </p>
+                            </div>
                             <CardParallaxComponent :data="data" :isLoading="isLoading" />
                         </div>
                     </div>

@@ -36,7 +36,7 @@
           <div>
             <div class="relative w-full h-48 bg-slate-100 overflow-hidden">
               <img
-                :src="project.image || defaultImage"
+                :src="resolveImage(project.image)"
                 :alt="project.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
@@ -176,6 +176,22 @@ const projectList = computed(() => {
 
 const showModal = ref(false)
 const selectedProject = ref(null)
+
+const assetImages = import.meta.glob('~/assets/images/**/*', { eager: true, import: 'default' })
+
+const resolveImage = (imgSrc) => {
+  if (!imgSrc) return defaultImage
+  if (imgSrc.startsWith('http://') || imgSrc.startsWith('https://') || imgSrc.startsWith('data:')) {
+    return imgSrc
+  }
+  const filename = imgSrc.split('/').pop()
+  for (const [path, url] of Object.entries(assetImages)) {
+    if (path.endsWith(filename)) {
+      return url
+    }
+  }
+  return imgSrc
+}
 
 const openModal = (project) => {
   selectedProject.value = project
