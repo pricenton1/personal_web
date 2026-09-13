@@ -31,33 +31,49 @@
 
 <script setup>
 import Typed from 'typed.js';
-import { onMounted, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 
 const person = defineProps({
-    data : Object
+    data: {
+        type: Object,
+        default: () => ({})
+    }
 })
 
 const job = ref(null);
 const bio = ref(null);
+let typedJobInstance = null;
+let typedBioInstance = null;
 
 onMounted(() => {
-  new Typed(job.value, {
-    strings: [person.data.job],
-    typeSpeed: 80,
-    backSpeed: 80,
-    backDelay: 500,
-    loop: true,
-  });
+  const jobText = person.data?.job || '';
+  const bioText = person.data?.bio || "";
 
-  new Typed(bio.value, {
-    strings: [person.data.bio],
-    typeSpeed: 50,
-    backSpeed: 20,
-    backDelay: 100,
-    loop: false,
-  });
+  if (job.value) {
+    typedJobInstance = new Typed(job.value, {
+      strings: [jobText],
+      typeSpeed: 80,
+      backSpeed: 80,
+      backDelay: 500,
+      loop: true,
+    });
+  }
+
+  if (bio.value) {
+    typedBioInstance = new Typed(bio.value, {
+      strings: [bioText],
+      typeSpeed: 50,
+      backSpeed: 20,
+      backDelay: 100,
+      loop: false,
+    });
+  }
 });
 
+onBeforeUnmount(() => {
+  if (typedJobInstance) typedJobInstance.destroy();
+  if (typedBioInstance) typedBioInstance.destroy();
+});
 </script>
 
 <style scoped>

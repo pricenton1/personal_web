@@ -18,7 +18,13 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiConfig: process.env.NUXT_PERSONAL ? JSON.parse(process.env.NUXT_PERSONAL) : {},
+      apiConfig: (() => {
+        try {
+          return process.env.NUXT_PERSONAL ? JSON.parse(process.env.NUXT_PERSONAL) : {};
+        } catch {
+          return {};
+        }
+      })(),
     },
   },
   app: {
